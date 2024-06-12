@@ -1,13 +1,13 @@
 # Word to PDF Converter
 
-This project is a Java-based desktop application that converts Microsoft Word documents (.doc and .docx) to PDF files. It uses the docx4j library for handling Word documents and Apache FOP for PDF conversion. The graphical user interface (GUI) is built using Swing and styled with FlatLaf.
+This project is a Java-based desktop application that converts Microsoft Word documents (.doc and .docx) to PDF files. It uses the docx4j library for handling Word documents and Apache FOP for PDF conversion. The graphical user interface (GUI) is built using Swing.
 
 ## Features
 
--   Add multiple Word documents for batch conversion.
--   Select an output directory for the converted PDF files.
--   Supports both .doc and .docx formats.
--   Maps fonts to ensure proper rendering in the PDF files.
+-   [x] Add multiple Word documents for batch conversion.
+-   [x] Select an output directory for the converted PDF files.
+-   [x] Supports both .doc and .docx formats.
+-   [ ] Maps fonts to ensure proper rendering in the PDF files. ( Still in progress )
 
 ## Prerequisites
 
@@ -62,7 +62,6 @@ The project relies on the following main dependencies:
 
 -   **docx4j**: For handling Word documents.
 -   **Apache FOP**: For converting documents to PDF.
--   **FlatLaf**: For modern look and feel of the GUI.
 
 All dependencies are defined in the `pom.xml` file and are managed by Maven.
 
@@ -71,4 +70,3 @@ All dependencies are defined in the `pom.xml` file and are managed by Maven.
 
 -   [docx4j](https://github.com/plutext/docx4j)
 -   [Apache FOP](https://xmlgraphics.apache.org/fop/)
--   [FlatLaf](https://www.formdev.com/flatlaf/)
