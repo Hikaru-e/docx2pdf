@@ -1,14 +1,13 @@
 package org.example;
 
+import org.docx4j.Docx4J;
+import org.docx4j.convert.out.FOSettings;
 import org.docx4j.fonts.IdentityPlusMapper;
 import org.docx4j.fonts.Mapper;
 import org.docx4j.fonts.PhysicalFont;
 import org.docx4j.fonts.PhysicalFonts;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
-import org.docx4j.convert.out.pdf.PdfConversion;
-import org.docx4j.convert.out.pdf.viaXSLFO.Conversion;
-import org.docx4j.convert.out.pdf.viaXSLFO.PdfSettings;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -133,10 +132,15 @@ public class Main extends JFrame {
                 // Map fonts
                 mapFonts(wordMLPackage);
 
-                // Convert to PDF
-                PdfConversion conversion = new Conversion(wordMLPackage);
-                PdfSettings pdfSettings = new PdfSettings();
-                conversion.output(new FileOutputStream(pdfFile), pdfSettings);
+                // Create FOSettings
+                FOSettings foSettings = Docx4J.createFOSettings();
+                foSettings.setOpcPackage(wordMLPackage);
+                foSettings.setApacheFopMime("application/pdf");
+
+                // Output the PDF
+                try (FileOutputStream os = new FileOutputStream(pdfFile)) {
+                    Docx4J.toFO(foSettings, os, Docx4J.FLAG_NONE);
+                }
 
                 JOptionPane.showMessageDialog(this, "File converted successfully: " + pdfFile.getName(), "Success", JOptionPane.INFORMATION_MESSAGE);
 
@@ -150,29 +154,32 @@ public class Main extends JFrame {
     }
 
     private void mapFonts(WordprocessingMLPackage wordMLPackage) throws Exception {
+        // Create a font mapper
         Mapper fontMapper = new IdentityPlusMapper();
 
-        // Adding a specific font mapping
-        PhysicalFont timesNewRoman = PhysicalFonts.get("Times New Roman");
-        if (timesNewRoman != null) {
-            fontMapper.put("Times New Roman", timesNewRoman);
-        }
+        // Discover system fonts
+        PhysicalFonts.discoverPhysicalFonts();
 
-        // Example of adding more fonts
-        PhysicalFont arial = PhysicalFonts.get("Arial");
-        if (arial != null) {
-            fontMapper.put("Arial", arial);
+        // Adding all discovered fonts to the font mapper
+        for (PhysicalFont font : PhysicalFonts.getPhysicalFonts().values()) {
+            fontMapper.put(font.getName(), font);
         }
 
         // Set the font mapper to the WordprocessingMLPackage
         wordMLPackage.setFontMapper(fontMapper);
+
+        // Handle fonts embedded in the Word document
+        if (wordMLPackage.getMainDocumentPart().getFontTablePart() != null) {
+            wordMLPackage.getMainDocumentPart().getFontTablePart().processEmbeddings(fontMapper);
+        }
     }
+
 
     public static void main(String[] args) {
         try {
-            // Set the FlatLaf look and feel
-            UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatLightLaf());
-        } catch (UnsupportedLookAndFeelException e) {
+            // Set the default look and feel of the operating system
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
 

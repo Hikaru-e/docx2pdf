@@ -74,13 +74,25 @@
             <version>${fop.version}</version>
         </dependency>
 
+        <!-- Add these dependencies for FontBox and PDFBox -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>2.0.27</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>fontbox</artifactId>
+            <version>2.0.27</version>
+        </dependency>
+
         <!-- FlatLaf for GUI look and feel -->
 
-        <dependency>
-            <groupId>com.formdev</groupId>
-            <artifactId>flatlaf</artifactId>
-            <version>${flatlaf.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.formdev</groupId>-->
+<!--            <artifactId>flatlaf</artifactId>-->
+<!--            <version>${flatlaf.version}</version>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>
